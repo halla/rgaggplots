@@ -1,0 +1,7 @@
+Package: rgaggplots
+Title: Collection of plots for Google Analytics
+Description: Collection of plots for Google Analytics and ggplot2. Works for data that is structured like the data by the rga package.
+Version: 0.1
+Author: Antti Halla <antti.halla@gmail.com>
+Maintainer: Antti Halla <antti.halla@gmail.com>
+License: MIT
