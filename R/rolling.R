@@ -2,7 +2,7 @@ library('ggplot2')
 library('zoo')
 library('xts')
 library('scales')
-library('sqldf')
+library('plyr')
 
 revenueByDeviceData <- function(x) UseMethod("revenueByDeviceData")
 revenueByDeviceData.rgaConfig <- function (cfg) {
@@ -18,7 +18,10 @@ revenueByDevice <- function(data, rolldays) {
   date_start <- as.Date(start.date, "%Y-%m-%d")
   date_end <- as.Date(end.date, "%Y-%m-%d")
   
-  data_all <- sqldf('select date, sum(adsenseRevenue) as adsenseRevenue from data group by date')           
+  data_all <- ddply(
+    data, .(date), 
+    summarise, adsenseRevenue = sum(adsenseRevenue))
+
            
    adsense2ts <- function() {
      desktop <- data[data$deviceCategory=="desktop",]
