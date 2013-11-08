@@ -4,7 +4,13 @@ library('xts')
 library('scales')
 library('sqldf')
 
+revenueByDeviceData <- function(x) UseMethod("revenueByDeviceData")
+revenueByDeviceData.rgaConfig <- function (cfg) {
+  getData(cfg, "ga:adsenseRevenue", "ga:date,ga:deviceCategory")
+}
 
+# metrics = "ga:adsenseRevenue", 
+# dimensions = "ga:date,ga:deviceCategory", 
 revenueByDevice <- function(data, rolldays) {
   start.date <- min(data$date)  
   end.date <- max(data$date)
@@ -43,3 +49,7 @@ revenueByDevice <- function(data, rolldays) {
   plotRevenueByDevice(ts, rolldays)
   
 }
+
+# TBD adsensense minus adwords
+# metrics = "ga:adsenseRevenue, ga:adCost", 
+# dimensions = "ga:date,ga:deviceCategory", 

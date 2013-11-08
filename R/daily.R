@@ -1,8 +1,15 @@
+library(ggplot2)
 library(scales)
 library(plyr)
 
+dayHourPlotData <- function(x) UseMethod("dayHourPlotData")
+dayHourPlotData.rgaConfig <- function (cfg) {
+  getData(cfg, "ga:visits,ga:adsenseRevenue,ga:pageviews", "ga:date,ga:dayOfWeek,ga:hour,ga:deviceCategory")
+}
 
-dayHourPlot <- function(data, metricColName, metricColTitle) {
+# dimensions = "ga:date,ga:dayOfWeek,ga:hour,ga:deviceCategory", 
+#dayHourPlot <- function(x) UseMethod("dayHourPlot")
+dayHourPlot <- function(data, metricColName, metricColTitle) {  
   colIdx <- names(data) %in% c(metricColName)
   data$theMetric <- data[,colIdx]
   
@@ -31,3 +38,4 @@ dayHourPlot <- function(data, metricColName, metricColTitle) {
   )
 
 }
+
