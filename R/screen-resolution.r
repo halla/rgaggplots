@@ -71,33 +71,29 @@ metricByOrientation <- function(data, rolldays, metricColName, metricColTitle, f
   
 }
 
-metricByResolution <- function(data, rolldays, metricColName, metricColTitle, fn) { 	
+metricByFactorDim <- function(
+	data, rolldays, 
+	metricColName, metricColTitle, 
+	dimColName,
+	fn) { 	
 	colIdx <- names(data) %in% c(metricColName)
   	data$theMetric <- data[,colIdx]
+  	colIdxDim <- names(data) %in% c(dimColName)
+  	data$theDim <- data[,colIdxDim]
 
 	data_all <- ddply(
-		data, .(date),
-	    function(x) c(theMetric = fn(x$theMetric))
+		data, ~ date,
+	    function(x) c(theMetric = fn(x$theMetric), x$theDim = "All")
 	)	
 	data <- ddply(
-		data, ~ date + resoClass,
+		data, ~ date + theDim,
 		function(x) c(theMetric = fn(x$theMetric))
 	)
+	data <- rbind(data, data_all)
            
-   adsense2ts <- function() {
-     mobile <- data[data$resoClass=="Mobile",]
-     mobiletablet <- data[data$resoClass=="Phones2tablets",]
-     tablet <- data[data$resoClass=="Portrait tablet",]
-     default <- data[data$resoClass=="Default",]
-     large <- data[data$resoClass=="Large",]
-     
-     ts_ctr = zoo(cbind(data_all$theMetric, 
-                         mobile$theMetric,
-                         mobiletablet$theMetric,
-                         tablet$theMetric,
-                         default$theMetric,
-                         large$theMetric),
-                   as.Date(data_all$date))
+
+   adsense2ts <- function() {     
+     ts_ctr = read.zoo(data, split='theDim')       
      colnames(ts_ctr) <- c("All", "Mobile", "Phones2tablets", "Portrait tablet", "Default", "Large")
      ts_ctr
    }
